@@ -2,7 +2,6 @@
 
 Psx MassController;
 
-unsigned int data = 0;
 int P, B, S,Pbit,Bbit;
 unsigned int Handle[]={15,2062,14,2059,11,2058,13,7,5,14,12,6,4,11,9,3,1,10,8,2,0};  //ハンドルビット判別
 
@@ -17,26 +16,26 @@ void massconSetup(){
 }
 
 void updateBrakeAccell(){
-  data = MassController.read();
-  Pbit = data & 2063; //bit処理
-  Bbit = data >> 12;
+  unsigned int rawdata = MassController.read();
+  Pbit = rawdata & 2063; //bit処理
+  Bbit = rawdata >> 12;
 
   if((Pbit == (int)Handle[0]) && (Bbit == (int)Handle[6])){  //ニュートラル判定
-    P = 0;
-    B = 0;
+    P = B = 0;
     return;
   }
-  for (int i = 0; i <= 22; i++) {
-    if(i <= 5){
-      if(Pbit == (int)Handle[i]){
-        P = i;
-        i = 5;
-      }
-    }else{
-      if(Bbit == (int)Handle[i]){
-        B = i - 6;
-        return;
-      }
+  
+  for (int i = 0; i <= 5; i++) {
+    if(Pbit == (int)Handle[i]){
+      P = i;
+      break;
+    }
+  }
+
+  for (int i = 6; i <= 22; i++){
+    if(Bbit == (int)Handle[i]){
+      B = i - 6;
+      break;
     }
   }
 }
