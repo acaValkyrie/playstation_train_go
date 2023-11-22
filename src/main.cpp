@@ -34,30 +34,9 @@ void setup(){
   MassController.setupPins(dataPin, cmndPin, attPin, clockPin, 10);
   Serial.begin(9600);
   Wire.begin();
-  pinMode(EB,OUTPUT);
-  pinMode(Start,OUTPUT);
-  pinMode(sankaku,OUTPUT);
-  pinMode(maru,OUTPUT);
-  pinMode(batsu,OUTPUT);
-  pinMode(shikaku,OUTPUT);
-
-  Wire.beginTransmission(0x28);       //L側　初期I2C通信
-  Wire.write(byte(0xA9));
-  Wire.write(127);
-  Wire.write(127);
-  Wire.endTransmission();
-
-  Wire.beginTransmission(0x29);       //R側　初期I2C通信
-  Wire.write(byte(0xA9));
-  Wire.write(127);
-  Wire.write(127);
-  Wire.endTransmission();
 
   P = 0;
   B = 0;
-  S = 0;
-  Mode = 0;           //モード初期設定は選択モード
-  ModeST = 0;
 }
 void loop(){
   data = MassController.read();
@@ -83,9 +62,11 @@ void loop(){
       }
     }
   }
-  
-  Serial.print("P: ");
+
+  Serial.print("P:");
   Serial.print(P);                //ノッチ表示
+  Serial.print(", Bbit:");
+  Serial.print(Bbit);             //ブレーキビット表示
   Serial.print(", B:");
   Serial.print(B);                //ブレーキ表示
   Serial.println();
